@@ -2,17 +2,31 @@
 #    uv export --no-hashes --format requirements-txt
 aiofiles==24.1.0
     # via gradio
+aiohappyeyeballs==2.6.1
+    # via aiohttp
+aiohttp==3.12.13
+    # via litellm
+aiosignal==1.3.2
+    # via aiohttp
 annotated-types==0.7.0
     # via pydantic
 anyio==4.9.0
     # via
     #   gradio
     #   httpx
+    #   openai
     #   starlette
+attrs==25.3.0
+    # via
+    #   aiohttp
+    #   jsonschema
+    #   referencing
 audioop-lts==0.2.1 ; python_full_version >= '3.13'
     # via gradio
 authlib==1.6.0
     # via gradio
+beautifulsoup4==4.13.4
+    # via markdownify
 certifi==2025.6.15
     # via
     #   httpcore
@@ -22,8 +36,10 @@ cffi==1.17.1 ; platform_python_implementation != 'PyPy'
     # via cryptography
 charset-normalizer==3.4.2
     # via requests
-click==8.2.1 ; sys_platform != 'emscripten'
+click==8.2.1
     # via
+    #   duckduckgo-search
+    #   litellm
     #   typer
     #   uvicorn
 colorama==0.4.6 ; sys_platform == 'win32'
@@ -32,7 +48,11 @@ colorama==0.4.6 ; sys_platform == 'win32'
     #   tqdm
 cryptography==45.0.4
     # via authlib
+distro==1.9.0
+    # via openai
 dotenv==0.9.9
+    # via agents-course-final
+duckduckgo-search==8.0.4
     # via agents-course-final
 fastapi==0.115.13
     # via gradio
@@ -40,6 +60,10 @@ ffmpy==0.6.0
     # via gradio
 filelock==3.18.0
     # via huggingface-hub
+frozenlist==1.7.0
+    # via
+    #   aiohttp
+    #   aiosignal
 fsspec==2025.5.1
     # via
     #   gradio-client
@@ -62,33 +86,61 @@ httpx==0.28.1
     # via
     #   gradio
     #   gradio-client
+    #   litellm
+    #   openai
     #   safehttpx
 huggingface-hub==0.33.0
     # via
     #   gradio
     #   gradio-client
+    #   smolagents
+    #   tokenizers
 idna==3.10
     # via
     #   anyio
     #   httpx
     #   requests
+    #   yarl
+importlib-metadata==8.7.0
+    # via litellm
 itsdangerous==2.2.0
     # via gradio
 jinja2==3.1.6
-    # via gradio
-markdown-it-py==3.0.0 ; sys_platform != 'emscripten'
+    # via
+    #   gradio
+    #   litellm
+    #   smolagents
+jiter==0.10.0
+    # via openai
+jsonschema==4.24.0
+    # via litellm
+jsonschema-specifications==2025.4.1
+    # via jsonschema
+litellm==1.72.6.post2
+    # via smolagents
+lxml==5.4.0
+    # via duckduckgo-search
+markdown-it-py==3.0.0
     # via rich
+markdownify==1.1.0
+    # via agents-course-final
 markupsafe==3.0.2
     # via
     #   gradio
     #   jinja2
-mdurl==0.1.2 ; sys_platform != 'emscripten'
+mdurl==0.1.2
     # via markdown-it-py
+multidict==6.5.0
+    # via
+    #   aiohttp
+    #   yarl
 numpy==2.2.6
     # via
     #   agents-course-final
     #   gradio
     #   pandas
+openai==1.88.0
+    # via litellm
 orjson==3.10.18
     # via gradio
 packaging==25.0
@@ -101,13 +153,23 @@ pandas==2.3.0
     #   agents-course-final
     #   gradio
 pillow==11.2.1
-    # via gradio
+    # via
+    #   gradio
+    #   smolagents
+primp==0.15.0
+    # via duckduckgo-search
+propcache==0.3.2
+    # via
+    #   aiohttp
+    #   yarl
 pycparser==2.22 ; platform_python_implementation != 'PyPy'
     # via cffi
 pydantic==2.11.6
     # via
     #   fastapi
     #   gradio
+    #   litellm
+    #   openai
     #   pydantic-settings
 pydantic-core==2.33.2
     # via pydantic
@@ -115,14 +177,16 @@ pydantic-settings==2.9.1
     # via agents-course-final
 pydub==0.25.1
     # via gradio
-pygments==2.19.1 ; sys_platform != 'emscripten'
+pygments==2.19.1
     # via rich
 python-dateutil==2.9.0.post0
     # via pandas
 python-dotenv==1.1.0
     # via
     #   dotenv
+    #   litellm
     #   pydantic-settings
+    #   smolagents
 python-multipart==0.0.20
     # via gradio
 pytz==2025.2
@@ -131,12 +195,27 @@ pyyaml==6.0.2
     # via
     #   gradio
     #   huggingface-hub
+referencing==0.36.2
+    # via
+    #   jsonschema
+    #   jsonschema-specifications
+regex==2024.11.6
+    # via tiktoken
 requests==2.32.4
     # via
     #   agents-course-final
     #   huggingface-hub
-rich==14.0.0 ; sys_platform != 'emscripten'
-    # via typer
+    #   smolagents
+    #   tiktoken
+    #   wikipedia-api
+rich==14.0.0
+    # via
+    #   smolagents
+    #   typer
+rpds-py==0.25.1
+    # via
+    #   jsonschema
+    #   referencing
 ruff==0.11.13
     # via gradio
 safehttpx==0.1.6
@@ -146,28 +225,45 @@ semantic-version==2.10.0
 shellingham==1.5.4 ; sys_platform != 'emscripten'
     # via typer
 six==1.17.0
-    # via python-dateutil
+    # via
+    #   markdownify
+    #   python-dateutil
+smolagents==1.18.0
+    # via agents-course-final
 sniffio==1.3.1
-    # via anyio
+    # via
+    #   anyio
+    #   openai
+soupsieve==2.7
+    # via beautifulsoup4
 starlette==0.46.2
     # via
     #   fastapi
     #   gradio
+tiktoken==0.9.0
+    # via litellm
+tokenizers==0.21.1
+    # via litellm
 tomlkit==0.13.3
     # via gradio
 tqdm==4.67.1
-    # via huggingface-hub
+    # via
+    #   huggingface-hub
+    #   openai
 typer==0.16.0 ; sys_platform != 'emscripten'
     # via gradio
 typing-extensions==4.14.0
     # via
     #   anyio
+    #   beautifulsoup4
     #   fastapi
     #   gradio
     #   gradio-client
     #   huggingface-hub
+    #   openai
     #   pydantic
     #   pydantic-core
+    #   referencing
     #   typer
     #   typing-inspection
 typing-inspection==0.4.1
@@ -184,3 +280,9 @@ uvicorn==0.34.3 ; sys_platform != 'emscripten'
     # via gradio
 websockets==15.0.1
     # via gradio-client
+wikipedia-api==0.8.1
+    # via agents-course-final
+yarl==1.20.1
+    # via aiohttp
+zipp==3.23.0
+    # via importlib-metadata

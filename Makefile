@@ -12,3 +12,6 @@ sync-requirements:
 
 run:
 	uv run app.py
+
+run-one:
+	uv run app.py --test

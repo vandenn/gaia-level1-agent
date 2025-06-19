@@ -7,6 +7,7 @@ load_dotenv()
 
 class Settings(BaseSettings):
     hf_token: str = Field(default=...)
+    anthropic_api_key: str = Field(default=...)
     default_api_url: str = Field(default="https://agents-course-unit4-scoring.hf.space")
 
 
