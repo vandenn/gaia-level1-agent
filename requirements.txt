@@ -11,11 +11,15 @@ anyio==4.9.0
     #   starlette
 audioop-lts==0.2.1 ; python_full_version >= '3.13'
     # via gradio
+authlib==1.6.0
+    # via gradio
 certifi==2025.6.15
     # via
     #   httpcore
     #   httpx
     #   requests
+cffi==1.17.1 ; platform_python_implementation != 'PyPy'
+    # via cryptography
 charset-normalizer==3.4.2
     # via requests
 click==8.2.1 ; sys_platform != 'emscripten'
@@ -26,6 +30,8 @@ colorama==0.4.6 ; sys_platform == 'win32'
     # via
     #   click
     #   tqdm
+cryptography==45.0.4
+    # via authlib
 dotenv==0.9.9
     # via agents-course-final
 fastapi==0.115.13
@@ -66,6 +72,8 @@ idna==3.10
     #   anyio
     #   httpx
     #   requests
+itsdangerous==2.2.0
+    # via gradio
 jinja2==3.1.6
     # via gradio
 markdown-it-py==3.0.0 ; sys_platform != 'emscripten'
@@ -76,8 +84,9 @@ markupsafe==3.0.2
     #   jinja2
 mdurl==0.1.2 ; sys_platform != 'emscripten'
     # via markdown-it-py
-numpy==2.3.0
+numpy==2.2.6
     # via
+    #   agents-course-final
     #   gradio
     #   pandas
 orjson==3.10.18
@@ -93,6 +102,8 @@ pandas==2.3.0
     #   gradio
 pillow==11.2.1
     # via gradio
+pycparser==2.22 ; platform_python_implementation != 'PyPy'
+    # via cffi
 pydantic==2.11.6
     # via
     #   fastapi
