@@ -19,6 +19,7 @@ class GaiaAgent(BaseAgent):
                 WikipediaSearchTool(),
                 VisitWebpageTool(),
             ],
+            planning_interval=3,
             model=self.model,
         )
 
