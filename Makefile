@@ -7,5 +7,8 @@ lint:
 	uv tool run ruff check --fix src
 	uv tool run ruff format src
 
+sync-requirements:
+	uv export --no-hashes --format requirements-txt > requirements.txt
+
 run:
-	uv run src/main.py
+	uv run app.py

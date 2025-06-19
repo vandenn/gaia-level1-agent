@@ -1,22 +1,15 @@
-<div align="center">
+---
+title: vandenn Agents Course Final
+emoji: 🕵🏻‍♂️
+colorFrom: indigo
+colorTo: indigo
+sdk: gradio
+sdk_version: 5.25.2
+app_file: app.py
+pinned: false
+hf_oauth: true
+# optional, default duration is 8 hours/480 minutes. Max duration is 30 days/43200 minutes.
+hf_oauth_expiration_minutes: 480
+---
 
-# (Repository Name Here)
-
-![python](https://img.shields.io/badge/python-3.11-blue)
-
-(description)
-
-</div>
-
-# 📄 Overview
-
-- (overview here)
-
-# 🛠 Setup
-
-Make sure you have `uv` installed in your system, then run:
-```bash
-make init
-make run
-```
-(other setup here)
+Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference

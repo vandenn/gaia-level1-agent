@@ -6,7 +6,8 @@ load_dotenv()
 
 
 class Settings(BaseSettings):
-    dummy_env_var: str = Field(default=...)
+    hf_token: str = Field(default=...)
+    default_api_url: str = Field(default=...)
 
 
 settings = Settings()  # from settings import settings
