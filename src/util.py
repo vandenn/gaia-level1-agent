@@ -51,7 +51,7 @@ def launch_gradio_ui(agent: BaseAgent) -> None:
         return run_and_submit_all(agent, profile)
 
     with gr.Blocks() as demo:
-        gr.Markdown("# Basic Agent Evaluation Runner")
+        gr.Markdown("# Agent Evaluation Runner on GAIA")
         gr.Markdown(
             """
             **Instructions:**
