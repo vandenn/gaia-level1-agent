@@ -153,6 +153,8 @@ class FinalAnswerTool(Tool):
                             "type": "text",
                             "text": f"""
                                 Rewrite the following ANSWER to be concise and use as few tokens as possible to answer the QUESTION directly.
+                                If there's ambiguity in the ANSWER, make a clear cut decision to give a concise result.
+                                Final result should not be in sentence format.
                                 If the answer is an error, return 'N/A' instead.
 
                                 QUESTION: {question}
