@@ -23,15 +23,15 @@ class GaiaAgent(BaseAgent):
         )
         self.agent = ToolCallingAgent(
             tools=[
-                DuckDuckGoSearchTool(),
+                DuckDuckGoSearchTool(max_results=3),
                 FinalAnswerTool(),
-                VisitWebpageTool(),
+                VisitWebpageTool(max_output_length=20000),
                 DownloadAndParseFileTool(),
                 PythonInterpreterTool(),
                 # TODO: Image interpretation, MP3 interpretation
             ],
             max_steps=10,
-            planning_interval=3,
+            planning_interval=5,
             model=self.model,
         )
         self.token_rate_limiter = InputTokenRateLimiter()
@@ -92,7 +92,9 @@ class InputTokenRateLimiter:
 
     def __init__(self, max_tpm=50000):
         self.max_tpm = max_tpm
-        self.token_window = deque() # stores (timestamp, tokens_used)
+        if not hasattr(self, "_initialized"):
+            self.token_window = deque() # stores (timestamp, tokens_used)
+            self._initialized = True
         
     def _update_queue(self, time_now):
         while self.token_window and time_now - self.token_window[0][0] > SECONDS_IN_MINUTE:
