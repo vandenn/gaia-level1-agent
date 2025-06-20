@@ -1,5 +1,6 @@
 import os
 from abc import ABC, abstractmethod
+from typing import Any
 
 import gradio as gr
 import pandas as pd
@@ -10,7 +11,7 @@ from src.settings import settings
 
 class BaseAgent(ABC):
     @abstractmethod
-    def run(self, question: str) -> str:
+    def run(self, question: str) -> Any:
         print(f"Agent received question (first 50 chars): {question[:50]}...")
         fixed_answer = "This is the BaseAgent's default answer."
         print(f"Agent returning fixed answer: {fixed_answer}")
