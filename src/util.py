@@ -11,7 +11,7 @@ from src.settings import settings
 
 class BaseAgent(ABC):
     @abstractmethod
-    def run(self, question: str) -> Any:
+    def run(self, question: str, file_name: str = "", file_content: str = "") -> Any:
         print(f"Agent received question (first 50 chars): {question[:50]}...")
         fixed_answer = "This is the BaseAgent's default answer."
         print(f"Agent returning fixed answer: {fixed_answer}")
@@ -100,6 +100,7 @@ def run_and_submit_all(agent: BaseAgent, profile: gr.OAuthProfile | None):
     api_url = settings.default_api_url
     questions_url = f"{api_url}/questions"
     submit_url = f"{api_url}/submit"
+    files_url = f"{api_url}/files"
 
     # In the case of an app running as a hugging Face space, this link points toward your codebase ( usefull for others so please keep it public)
     agent_code = f"https://huggingface.co/spaces/{space_id}/tree/main"
@@ -118,10 +119,6 @@ def run_and_submit_all(agent: BaseAgent, profile: gr.OAuthProfile | None):
     except requests.exceptions.RequestException as e:
         print(f"Error fetching questions: {e}")
         return f"Error fetching questions: {e}", None
-    except requests.exceptions.JSONDecodeError as e:
-        print(f"Error decoding JSON response from questions endpoint: {e}")
-        print(f"Response text: {response.text[:500]}")
-        return f"Error decoding server response for questions: {e}", None
     except Exception as e:
         print(f"An unexpected error occurred fetching questions: {e}")
         return f"An unexpected error occurred fetching questions: {e}", None
@@ -133,11 +130,14 @@ def run_and_submit_all(agent: BaseAgent, profile: gr.OAuthProfile | None):
     for item in questions_data:
         task_id = item.get("task_id")
         question_text = item.get("question")
+        file_name = item.get("file_name")
+        file_url = "" if not file_name else files_url + "/" + task_id
         if not task_id or question_text is None:
             print(f"Skipping item with missing task_id or question: {item}")
             continue
+        
         try:
-            submitted_answer = agent.run(question_text)
+            submitted_answer = agent.run(question_text, file_name, file_url)
             answers_payload.append(
                 {"task_id": task_id, "submitted_answer": submitted_answer}
             )
