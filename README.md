@@ -25,6 +25,7 @@ hf_oauth_expiration_minutes: 480
 # 📄 Overview
 
 This is an agent I built with [smolagents](https://huggingface.co/docs/smolagents/en/index) for solving [GAIA level 1 benchmark questions](https://huggingface.co/spaces/gaia-benchmark/leaderboard) as part of [HuggingFace's agents course](https://huggingface.co/learn/agents-course/unit0/onboarding).
+This was built using the [provided template in the course](https://huggingface.co/spaces/agents-course/Final_Assignment_Template) as a starting point.
 
 There are a couple of things here that I implemented which I can potentially re-use in future projects, such as the token rate limit handler.
 
