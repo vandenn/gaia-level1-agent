@@ -28,6 +28,8 @@ This is an agent I built with [smolagents](https://huggingface.co/docs/smolagent
 
 There are a couple of things here that I implemented which I can potentially re-use in future projects, such as the token rate limit handler.
 
+**This repo is a work-in-progress**. I'll be looking to improve the performance of the agent on GAIA with additional features/tools in the future.
+
 # 🛠 Setup
 
 Make sure you have `uv` installed in your system, then run:
