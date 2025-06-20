@@ -17,14 +17,16 @@ hf_oauth_expiration_minutes: 480
 # GAIA Level 1 Agent
 
 ![python](https://img.shields.io/badge/python-3.11-blue)
+[![Open in Spaces](https://huggingface.co/datasets/huggingface/badges/resolve/main/open-in-hf-spaces-sm.svg)](https://huggingface.co/spaces/vandenn/gaia_level1_agent)
 
-This is an agent I built with [smolagents](https://huggingface.co/docs/smolagents/en/index) for solving [GAIA level 1 benchmark questions](https://huggingface.co/spaces/gaia-benchmark/leaderboard) as part of [HuggingFace's agents course](https://huggingface.co/learn/agents-course/unit0/onboarding).
 
 </div>
 
 # 📄 Overview
 
-The app primarily runs on GradIO and smolagents.
+This is an agent I built with [smolagents](https://huggingface.co/docs/smolagents/en/index) for solving [GAIA level 1 benchmark questions](https://huggingface.co/spaces/gaia-benchmark/leaderboard) as part of [HuggingFace's agents course](https://huggingface.co/learn/agents-course/unit0/onboarding).
+
+There are a couple of things here that I implemented which I can potentially re-use in future projects, such as the token rate limit handler.
 
 # 🛠 Setup
 
