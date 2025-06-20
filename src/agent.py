@@ -18,8 +18,8 @@ from src.util import BaseAgent
 class GaiaAgent(BaseAgent):
     def __init__(self):
         self.model = LiteLLMModel(
-            model_id="anthropic/claude-3-5-haiku-20241022",
-            api_key=settings.anthropic_api_key
+            model_id=settings.llm_model_id,
+            api_key=settings.llm_api_key
         )
         self.agent = ToolCallingAgent(
             tools=[
@@ -30,6 +30,7 @@ class GaiaAgent(BaseAgent):
                 PythonInterpreterTool(),
                 # TODO: Image interpretation, MP3 interpretation
             ],
+            max_steps=10,
             planning_interval=3,
             model=self.model,
         )
@@ -43,10 +44,12 @@ class GaiaAgent(BaseAgent):
         retry_count = 0
 
         input = f"""
-            Answer the following QUESTION as concisely as possible.
+            Answer the following QUESTION as concisely as possible. A necessary FILE may be provided as part of the context of the QUESTION.
             Make the shortest possible execution plan to answer this QUESTION.
 
             QUESTION: {question}
+            FILE NAME: {file_name if file_name else 'N/A'}
+            FILE URL: {file_url if file_url else 'N/A'}
         """
 
         while True:
@@ -128,8 +131,8 @@ class FinalAnswerTool(Tool):
 
     def __init__(self):
         self.model = LiteLLMModel(
-            model_id="anthropic/claude-3-5-haiku-20241022",
-            api_key=settings.anthropic_api_key,
+            model_id=settings.llm_model_id,
+            api_key=settings.llm_api_key,
             temperature=0.1,
             max_tokens=20
         )
