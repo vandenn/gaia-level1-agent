@@ -1,8 +1,14 @@
-import time
 import random
+import time
 from typing import Any
 
-from smolagents import DuckDuckGoSearchTool, LiteLLMModel, VisitWebpageTool, ToolCallingAgent, PythonInterpreterTool
+from smolagents import (
+    DuckDuckGoSearchTool,
+    LiteLLMModel,
+    PythonInterpreterTool,
+    ToolCallingAgent,
+    VisitWebpageTool,
+)
 from smolagents.agents import FinalAnswerStep
 
 from src.settings import settings
@@ -13,8 +19,7 @@ from src.utils import BaseAgent, InputTokenRateLimiter
 class GaiaAgent(BaseAgent):
     def __init__(self):
         self.model = LiteLLMModel(
-            model_id=settings.llm_model_id,
-            api_key=settings.llm_api_key
+            model_id=settings.llm_model_id, api_key=settings.llm_api_key
         )
         self.agent = ToolCallingAgent(
             tools=[
@@ -43,8 +48,8 @@ class GaiaAgent(BaseAgent):
             Make the shortest possible execution plan to answer this QUESTION.
 
             QUESTION: {question}
-            FILE NAME: {file_name if file_name else 'N/A'}
-            FILE URL: {file_url if file_url else 'N/A'}
+            FILE NAME: {file_name if file_name else "N/A"}
+            FILE URL: {file_url if file_url else "N/A"}
         """
 
         while True:
@@ -60,12 +65,18 @@ class GaiaAgent(BaseAgent):
                         final_answer = step.output
                 break
             except Exception as e:
-                if "overloaded" in str(e).lower() or "rate limit" in str(e).lower() or "529" in str(e):
+                if (
+                    "overloaded" in str(e).lower()
+                    or "rate limit" in str(e).lower()
+                    or "529" in str(e)
+                ):
                     if retry_count >= self.max_retries:
                         print(f"Max retries reached. Error: {e}")
                         break
-                    delay = self.base_delay * (2 ** retry_count) + random.uniform(0, 1)
-                    print(f"Anthropic server error due to overload or rate limit. Retrying in {delay:.1f} seconds..")
+                    delay = self.base_delay * (2**retry_count) + random.uniform(0, 1)
+                    print(
+                        f"Anthropic server error due to overload or rate limit. Retrying in {delay:.1f} seconds.."
+                    )
                     print(f"The error was: {e}")
                     time.sleep(delay)
                     retry_count += 1

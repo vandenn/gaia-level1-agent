@@ -1,8 +1,6 @@
-from abc import ABC, abstractmethod
-from typing import Any
-
-from collections import deque
 import time
+from abc import ABC, abstractmethod
+from collections import deque
 from typing import Any
 
 
@@ -16,10 +14,12 @@ class BaseAgent(ABC):
 
 
 SECONDS_IN_MINUTE = 60
+
+
 class InputTokenRateLimiter:
     _instance = None
 
-    def __new__(cls): # Singleton
+    def __new__(cls):  # Singleton
         if cls._instance is None:
             cls._instance = super(InputTokenRateLimiter, cls).__new__(cls)
         return cls._instance
@@ -27,11 +27,13 @@ class InputTokenRateLimiter:
     def __init__(self, max_tpm=50000):
         self.max_tpm = max_tpm
         if not hasattr(self, "_initialized"):
-            self.token_window = deque() # stores (timestamp, tokens_used)
+            self.token_window = deque()  # stores (timestamp, tokens_used)
             self._initialized = True
-        
+
     def _update_queue(self, time_now):
-        while self.token_window and time_now - self.token_window[0][0] > SECONDS_IN_MINUTE:
+        while (
+            self.token_window and time_now - self.token_window[0][0] > SECONDS_IN_MINUTE
+        ):
             self.token_window.popleft()
 
     def tokens_used_last_minute(self):
@@ -54,4 +56,3 @@ class InputTokenRateLimiter:
         now = time.time()
         self.token_window.append((now, tokens))
         self._update_queue(now)
-

@@ -1,8 +1,8 @@
 import mimetypes
-import requests
-import pandas as pd
 from io import BytesIO
 
+import pandas as pd
+import requests
 from smolagents import LiteLLMModel
 from smolagents.tools import Tool
 
@@ -14,8 +14,11 @@ class FinalAnswerTool(Tool):
     name = "final_answer"
     description = "Provides the exact, final answer to the given question."
     inputs = {
-        "question": {"type": "string", "description": "The original question being asked."},
-        "answer": {"type": "string", "description": "The answer to the question."}
+        "question": {
+            "type": "string",
+            "description": "The original question being asked.",
+        },
+        "answer": {"type": "string", "description": "The answer to the question."},
     }
     output_type = "string"
 
@@ -24,7 +27,7 @@ class FinalAnswerTool(Tool):
             model_id=settings.llm_model_id,
             api_key=settings.llm_api_key,
             temperature=0.1,
-            max_tokens=20
+            max_tokens=20,
         )
         self.token_rate_limiter = InputTokenRateLimiter()
         self.expected_tokens_per_step = 10000
@@ -47,9 +50,9 @@ class FinalAnswerTool(Tool):
 
                                 QUESTION: {question}
                                 ANSWER: {answer}
-                            """
+                            """,
                         }
-                    ]
+                    ],
                 }
             ]
         )
@@ -65,8 +68,14 @@ class DownloadAndParseFileTool(Tool):
     name = "download_and_parse_file"
     description = "Downloads a file from a given URL and parses it based on the file name. Returns the file content as text if possible, or nothing if image, etc."
     inputs = {
-        "file_name": {"type": "string", "description": "The name of the file (used to determine type)."},
-        "file_url": {"type": "string", "description": "The URL of the file to download."},
+        "file_name": {
+            "type": "string",
+            "description": "The name of the file (used to determine type).",
+        },
+        "file_url": {
+            "type": "string",
+            "description": "The URL of the file to download.",
+        },
     }
     output_type = "string"
 
@@ -83,7 +92,10 @@ class DownloadAndParseFileTool(Tool):
         # Try to handle the 'no file' JSON case
         try:
             file_data = response.json()
-            if "detail" in file_data and "No file path associated" in file_data["detail"]:
+            if (
+                "detail" in file_data
+                and "No file path associated" in file_data["detail"]
+            ):
                 return f"No file found for {file_name} at {file_url}"
         except Exception:
             pass  # Not JSON, so it's probably the file content
@@ -107,4 +119,3 @@ class DownloadAndParseFileTool(Tool):
                 return f"Failed to parse Excel file: {e}"
         else:
             return f"[{file_name} is a binary file of type {file_type or 'unknown'} and cannot be parsed as text.]"
-

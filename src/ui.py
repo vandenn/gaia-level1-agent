@@ -125,7 +125,7 @@ def run_and_submit_all(agent: BaseAgent, profile: gr.OAuthProfile | None):
         if not task_id or question_text is None:
             print(f"Skipping item with missing task_id or question: {item}")
             continue
-        
+
         try:
             submitted_answer = agent.run(question_text, file_name, file_url)
             answers_payload.append(
