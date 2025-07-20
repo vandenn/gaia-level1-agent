@@ -1,8 +1,3 @@
-import mimetypes
-from io import BytesIO
-
-import pandas as pd
-import requests
 from smolagents import LiteLLMModel
 from smolagents.tools import Tool
 
@@ -62,60 +57,3 @@ class FinalAnswerTool(Tool):
             tokens_used = token_usage_info.input_tokens
         self.token_rate_limiter.add_tokens(tokens_used)
         return response.content
-
-
-class DownloadAndParseFileTool(Tool):
-    name = "download_and_parse_file"
-    description = "Downloads a file from a given URL and parses it based on the file name. Returns the file content as text if possible, or nothing if image, etc."
-    inputs = {
-        "file_name": {
-            "type": "string",
-            "description": "The name of the file (used to determine type).",
-        },
-        "file_url": {
-            "type": "string",
-            "description": "The URL of the file to download.",
-        },
-    }
-    output_type = "string"
-
-    def __init__(self):
-        self.is_initialized = True
-
-    def forward(self, file_name: str, file_url: str) -> str:
-        try:
-            response = requests.get(file_url)
-            response.raise_for_status()
-        except Exception as e:
-            return f"Failed to download file: {e}"
-
-        # Try to handle the 'no file' JSON case
-        try:
-            file_data = response.json()
-            if (
-                "detail" in file_data
-                and "No file path associated" in file_data["detail"]
-            ):
-                return f"No file found for {file_name} at {file_url}"
-        except Exception:
-            pass  # Not JSON, so it's probably the file content
-
-        file_type, _ = mimetypes.guess_type(file_name)
-        if file_type and file_type.startswith("text"):
-            try:
-                return response.content.decode("utf-8")
-            except Exception:
-                return "Failed to decode text file as utf-8."
-        elif file_name.endswith(".py"):
-            try:
-                return response.content.decode("utf-8")
-            except Exception:
-                return "Failed to decode Python file as utf-8."
-        elif file_name.endswith(".xlsx"):
-            try:
-                df = pd.read_excel(BytesIO(response.content))
-                return df.to_string()
-            except Exception as e:
-                return f"Failed to parse Excel file: {e}"
-        else:
-            return f"[{file_name} is a binary file of type {file_type or 'unknown'} and cannot be parsed as text.]"

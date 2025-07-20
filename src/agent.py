@@ -1,7 +1,12 @@
+import mimetypes
 import random
 import time
-from typing import Any
+from io import BytesIO
+from typing import Any, TypedDict
 
+import pandas as pd
+import requests
+from PIL import Image
 from smolagents import (
     DuckDuckGoSearchTool,
     LiteLLMModel,
@@ -12,8 +17,13 @@ from smolagents import (
 from smolagents.agents import FinalAnswerStep
 
 from src.settings import settings
-from src.tools import DownloadAndParseFileTool, FinalAnswerTool
+from src.tools import FinalAnswerTool
 from src.utils import BaseAgent, InputTokenRateLimiter
+
+
+class ParsedFile(TypedDict):
+    text: str
+    image: Image
 
 
 class GaiaAgent(BaseAgent):
@@ -25,7 +35,6 @@ class GaiaAgent(BaseAgent):
             tools=[
                 DuckDuckGoSearchTool(max_results=3),
                 VisitWebpageTool(max_output_length=20000),
-                DownloadAndParseFileTool(),
                 PythonInterpreterTool(),
                 FinalAnswerTool(),
                 # TODO: Image interpretation, MP3 interpretation
@@ -43,18 +52,24 @@ class GaiaAgent(BaseAgent):
         final_answer = None
         retry_count = 0
 
+        parsed_file = self._parse_file(file_name, file_url)
         input = f"""
-            Answer the following QUESTION as concisely as possible. A necessary FILE may be provided as part of the context of the QUESTION.
+            Answer the following QUESTION as concisely as possible.
+            If available, a FILE NAME and the actual FILE is attached for your reference.
             Make the shortest possible execution plan to answer this QUESTION.
 
             QUESTION: {question}
             FILE NAME: {file_name if file_name else "N/A"}
-            FILE URL: {file_url if file_url else "N/A"}
         """
+        if parsed_file["text"]:
+            input = input + f"\nFILE CONTENT: {parsed_file['text']}"
+        input_images = None
+        if parsed_file["image"]:
+            input_images = [parsed_file["image"]]
 
         while True:
             try:
-                for step in self.agent.run(input, stream=True):
+                for step in self.agent.run(input, images=input_images, stream=True):
                     self.token_rate_limiter.maybe_wait(self.expected_tokens_per_step)
                     token_usage_info = getattr(step, "token_usage", None)
                     tokens_used = 0
@@ -85,6 +100,63 @@ class GaiaAgent(BaseAgent):
                     break
 
         return final_answer
+
+    def _parse_file(self, file_name: str, file_url: str) -> ParsedFile:
+        result = ParsedFile(text=None, image=None)
+        if not file_name or not file_url:
+            return result
+
+        try:
+            response = requests.get(file_url)
+            response.raise_for_status()
+        except Exception as e:
+            print(f"Failed to download file: {e}")
+            return result
+
+        # Try to handle the 'no file' JSON case
+        try:
+            file_data = response.json()
+            if (
+                "detail" in file_data
+                and "No file path associated" in file_data["detail"]
+            ):
+                print(f"No file found for {file_name} at {file_url}")
+                return result
+        except Exception:
+            pass  # Not JSON, so it's probably the file content
+
+        file_type, _ = mimetypes.guess_type(file_name)
+        if file_type and file_type.startswith("text"):
+            try:
+                result["text"] = response.content.decode("utf-8")
+                return result
+            except Exception:
+                return "Failed to decode text file as utf-8."
+        elif file_name.endswith(".py"):
+            try:
+                result["text"] = response.content.decode("utf-8")
+                return result
+            except Exception:
+                return "Failed to decode Python file as utf-8."
+        elif file_name.endswith(".xlsx"):
+            try:
+                df = pd.read_excel(BytesIO(response.content))
+                result["text"] = df.to_string()
+                return result
+            except Exception as e:
+                return f"Failed to parse Excel file: {e}"
+        elif file_type and file_type.startswith("image"):
+            try:
+                image = Image.open(BytesIO(response.content))
+                result["image"] = image
+                return result
+            except Exception as e:
+                return f"Failed to decode image file: {e}"
+        else:
+            print(
+                f"[{file_name} is a binary file of type {file_type or 'unknown'} and cannot be parsed as text.]"
+            )
+            return result
 
 
 if __name__ == "__main__":
