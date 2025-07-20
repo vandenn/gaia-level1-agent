@@ -1,11 +1,16 @@
-from src.agent import GaiaAgent
-from src.ui import initialize
 import sys
+
+from src.agent import GaiaAgent
+from src.settings import settings
+from src.ui import initialize
 
 if __name__ == "__main__":
     if "--test" in sys.argv:
-        question = "How many studio albums were published by Mercedes Sosa between 2000 and 2009 (included)? You can use the latest 2022 version of English wikipedia."
+        question = "Review the chess position provided in the image. It is black's turn. Provide the correct next move for black which guarantees a win. Please provide your response in algebraic notation."
+        file_name = "cca530fc-4052-43b2-b130-b30968d8aa44.png"
+        api_url = settings.default_api_url
+        file_url = f"{api_url}/files/cca530fc-4052-43b2-b130-b30968d8aa44"
         agent = GaiaAgent()
-        print(f"Response: {agent.run(question)}")
+        print(f"Response: {agent.run(question, file_name, file_url)}")
     else:
         initialize(GaiaAgent())
