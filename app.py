@@ -1,5 +1,5 @@
 from src.agent import GaiaAgent
-from src.util import initialize
+from src.ui import initialize
 import sys
 
 if __name__ == "__main__":
