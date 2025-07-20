@@ -5,7 +5,7 @@ import pandas as pd
 import requests
 
 from src.settings import settings
-from src.util import BaseAgent
+from src.utils import BaseAgent
 
 
 def initialize(agent: BaseAgent) -> None:
