@@ -1,3 +1,4 @@
+import datetime
 import os
 
 import gradio as gr
@@ -176,6 +177,16 @@ def run_and_submit_all(agent: BaseAgent, profile: gr.OAuthProfile | None):
         )
         print("Submission successful.")
         results_df = pd.DataFrame(results_log)
+
+        # Save results to CSV for future reference
+        results_dir = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)), "results"
+        )
+        os.makedirs(results_dir, exist_ok=True)
+        now_str = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        csv_path = os.path.join(results_dir, f"results_{now_str}.csv")
+        results_df.to_csv(csv_path, index=False)
+
         return final_status, results_df
     except requests.exceptions.HTTPError as e:
         error_detail = f"Server responded with status {e.response.status_code}."
