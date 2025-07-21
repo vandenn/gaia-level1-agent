@@ -37,7 +37,7 @@ class GaiaAgent(BaseAgent):
                 VisitWebpageTool(max_output_length=20000),
                 PythonInterpreterTool(),
                 FinalAnswerTool(),
-                # TODO: Image interpretation, MP3 interpretation
+                # TODO: MP3 interpretation
             ],
             max_steps=10,
             planning_interval=5,
