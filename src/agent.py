@@ -55,7 +55,8 @@ class GaiaAgent(BaseAgent):
         parsed_file = self._parse_file(file_name, file_url)
         input = f"""
             Answer the following QUESTION as concisely as possible.
-            If available, a FILE NAME and the actual FILE is attached for your reference.
+            If available, a FILE NAME and the actual FILE will be attached after your planning stage.
+            If the FILE NAME is not N/A, assume that the FILE is available.
             Make the shortest possible execution plan to answer this QUESTION.
 
             QUESTION: {question}
